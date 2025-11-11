@@ -81,6 +81,9 @@ const config = {
         },
         extra: {
             router: {},
+            eas: {
+                projectId: "82d8a6a5-aef1-435f-9025-55cea15e0c7c"
+            }
         },
         backgroundColor: "#000000",
         splash: {
