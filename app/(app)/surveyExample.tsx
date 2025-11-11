@@ -175,7 +175,7 @@ export default function SurveyExample() {
             <View style={styles.inputsContainer}>
                 <Text style={globalStyles.sectionTitle}>Demographics</Text>
                 <Picture
-                    asset={require('@/assets/images/icon.png')}
+                    asset={require('@/assets/images/LAB_512.png')}
                     caption='Images are displayed like this'
                 />
                 <Survey

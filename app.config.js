@@ -4,11 +4,11 @@
 
 const config = {
     expo: {
-        name: "CogNative",
-        slug: "cognative",
-        scheme: "cognative",
+        name: "Sussex DSA Lab Study",
+        slug: "dsa",
+        scheme: "dsa",
         version: "1.0.0",
-        icon: "./assets/images/icon.png",
+        icon: "./assets/images/LAB_512.png",
         userInterfaceStyle: "automatic",
         newArchEnabled: true,
         ios: {
@@ -23,17 +23,14 @@ const config = {
                 ],
                 ITSAppUsesNonExemptEncryption: false,
             },
-            bundleIdentifier: "com.maxlovell.cognative",
-            backgroundColor: "#000000",
+            bundleIdentifier: "com.maxlovell.dsa",
         },
         android: {
             userInterfaceStyle: "dark",
             backgroundColor: "#000000",
             adaptiveIcon: {
                 backgroundColor: "#000000",
-                foregroundImage: "./assets/images/android-icon-foreground.png",
-                backgroundImage: "./assets/images/android-icon-background.png",
-                monochromeImage: "./assets/images/android-icon-monochrome.png",
+                foregroundImage: "./assets/images/LAB_192.png",
             },
             edgeToEdgeEnabled: true,
             softwareKeyboardLayoutMode: "pan",
@@ -42,7 +39,7 @@ const config = {
                 "android.permission.MODIFY_AUDIO_SETTINGS",
                 "android.permission.RECORD_AUDIO",
             ],
-            package: "com.maxlovell.cognative",
+            package: "com.maxlovell.dsa",
         },
         web: {
             bundler: "metro",
@@ -60,7 +57,7 @@ const config = {
             [
                 "expo-splash-screen",
                 {
-                    image: "./assets/images/splash-icon.png",
+                    image: "./assets/images/LAB_512.png",
                     imageWidth: 200,
                     resizeMode: "contain",
                     backgroundColor: "#000000",
@@ -84,9 +81,6 @@ const config = {
         },
         extra: {
             router: {},
-            eas: {
-                projectId: "cad52bbe-fe46-4866-bc69-005ad2b0780b",
-            },
         },
         backgroundColor: "#000000",
         splash: {
@@ -100,7 +94,7 @@ export default () => {
     // Check if the build is for the web platform
     if (process.env.PLATFORM === "web") {
         // If it is web, add the baseUrl to experiments
-        config.expo.experiments.baseUrl = "/cognative";
+        config.expo.experiments.baseUrl = "/dsa";
     }
 
     // Return the final config object
