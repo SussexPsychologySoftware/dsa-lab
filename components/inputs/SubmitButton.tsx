@@ -61,7 +61,7 @@ export default function SubmitButton({ text, disabledText, disabled, onPress, st
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: 'white',
+        backgroundColor: 'lightgrey',
         color: 'black',
         paddingVertical: 10,
         paddingHorizontal: 15,
