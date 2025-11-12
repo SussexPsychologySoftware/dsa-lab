@@ -289,7 +289,7 @@ export const debriefSurvey: SurveyComponent[] = [
 // -=*#*=- DEFINITION -=*#*=-
 export const colourAdjuster: ExperimentDefinition = {
     name: 'DSA',
-    send_data: true,
+    passphrase: 'lab',
     debug: true,
     send_data: false, //Set this to false at first and only flip back if consent granted to send data.
     autoroute: true,
