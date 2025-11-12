@@ -9,7 +9,7 @@ const config = {
         scheme: "dsa",
         version: "1.0.0",
         icon: "./assets/images/LAB_512.png",
-        userInterfaceStyle: "automatic",
+        userInterfaceStyle: "dark",
         newArchEnabled: true,
         ios: {
             supportsTablet: true,
@@ -24,6 +24,7 @@ const config = {
                 ITSAppUsesNonExemptEncryption: false,
             },
             bundleIdentifier: "com.maxlovell.dsa",
+            backgroundColor: "#000000",
         },
         android: {
             userInterfaceStyle: "dark",
