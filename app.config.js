@@ -4,7 +4,7 @@
 
 const config = {
     expo: {
-        name: "Sussex DSA Lab Study",
+        name: "DSA LAB",
         slug: "dsa",
         scheme: "dsa",
         version: "1.0.0",
