@@ -290,7 +290,7 @@ export const debriefSurvey: SurveyComponent[] = [
 export const colourAdjuster: ExperimentDefinition = {
     name: 'DSA',
     passphrase: 'lab',
-    debug: true,
+    debug: false,
     send_data: false, //Set this to false at first and only flip back if consent granted to send data.
     autoroute: true,
     participant_info_datapipe_id: 'q2ecSpabQ6nH',
