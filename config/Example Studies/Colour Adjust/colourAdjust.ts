@@ -291,7 +291,7 @@ export const colourAdjuster: ExperimentDefinition = {
     name: 'DSA',
     passphrase: 'lab',
     debug: false,
-    send_data: false, //Set this to false at first and only flip back if consent granted to send data.
+    send_data: true, //Set this to false at first and only flip back if consent granted to send data.
     autoroute: true,
     participant_info_datapipe_id: 'q2ecSpabQ6nH',
     tasks: [
