@@ -341,18 +341,6 @@ export const colourAdjuster: ExperimentDefinition = {
             }
         },
         {
-            id: 'debrief',
-            type: 'survey',
-            name: 'Do we remember the colours of familiar devices?',
-            prompt: 'Read Debrief',
-            questions: debriefSurvey,
-            skip_if: {
-                state_key: 'participantVariables.device.deviceType',
-                operator: '!=',
-                compare_value: 'PHONE'
-            }
-        },
-        {
             id: 'test',
             type: 'screen',
             path_to_screen: '/DSA/showTrialData',
