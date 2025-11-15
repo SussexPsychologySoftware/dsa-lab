@@ -16,7 +16,7 @@ const setupSurvey: SurveyComponent[] = [
         required: true
     },
     {
-        key: 'consent',
+        key: 'familiarity',
         type: 'radio',
         question: 'Device familiarity:',
         options: [
