@@ -52,13 +52,6 @@ const mainSurvey: SurveyComponent[] = [
         // titleStyle: sectionTitleStyle,
     },
     {
-        key: 'onPhone',
-        type: 'radio',
-        question: 'Are you completing this study on your phone?',
-        options: ['Yes', 'No'],
-        required: true,
-    },
-    {
         key: 'make',
         type: 'text',
         question: 'What make is your phone?',
