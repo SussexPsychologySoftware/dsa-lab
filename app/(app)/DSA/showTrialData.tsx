@@ -1,4 +1,4 @@
-import {Text, View, StyleSheet, Pressable, ScrollView, ColorValue} from "react-native";
+import {Text, View, StyleSheet, Pressable, ScrollView, ColorValue, Dimensions} from "react-native";
 import React, {useEffect, useState} from "react";
 import {LAB, LCH, RGB} from "@/types/colours";
 import {useExperiment} from "@/context/ExperimentContext";
@@ -31,29 +31,30 @@ export default function ShowTrialDataScreen() {
     const { displayState, getTaskFilename } = useExperiment();
     const [trialData, setTrialData] = useState<Trial[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const testData: TestColour[] = [
-        {RGB: {r:255, g:255, b:255}, description: 'WHITE'},
-        {RGB: {r:255, g:0, b:0}, description: 'RED'},
-        {RGB: {r:50, g:0, b:0}, description: 'RED (50)'},
-        {RGB: {r:100, g:0, b:0}, description: 'RED (100)'},
-        {RGB: {r:150, g:0, b:0}, description: 'RED (150)'},
-        {RGB: {r:200, g:0, b:0}, description: 'RED (200)'},
-        {RGB: {r:0, g:255, b:0}, description: 'GREEN'},
-        {RGB: {r:0, g:50, b:0}, description: 'GREEN (50)'},
-        {RGB: {r:0, g:100, b:0}, description: 'GREEN (100)'},
-        {RGB: {r:0, g:150, b:0}, description: 'GREEN (150)'},
-        {RGB: {r:0, g:200, b:0}, description: 'GREEN (200)'},
-        {RGB: {r:0, g:0, b:255}, description: 'BLUE'},
-        {RGB: {r:0, g:0, b:50}, description: 'BLUE (50)'},
-        {RGB: {r:0, g:0, b:100}, description: 'BLUE (100)'},
-        {RGB: {r:0, g:0, b:150}, description: 'BLUE (150)'},
-        {RGB: {r:0, g:0, b:200}, description: 'BLUE (200)'},
-        {RGB: {r:255, g:255, b:0}, description: 'YELLOW'}
+    const testData: RGB[] = [
+        {r:255, g:255, b:255},
+        {r:255, g:0, b:0},
+        {r:50, g:0, b:0},
+        {r:100, g:0, b:0},
+        {r:150, g:0, b:0},
+        {r:200, g:0, b:0},
+        {r:0, g:255, b:0},
+        {r:0, g:50, b:0},
+        {r:0, g:100, b:0},
+        {r:0, g:150, b:0},
+        {r:0, g:200, b:0},
+        {r:0, g:0, b:255},
+        {r:0, g:0, b:50},
+        {r:0, g:0, b:100},
+        {r:0, g:0, b:150},
+        {r:0, g:0, b:200},
+        {r:255, g:255, b:0},
     ];
+
     const RGB2rgb = (rgb: RGB) => {
         return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     }
-    const [backgroundColour, setBackgroundColour] = useState<ColorValue>(RGB2rgb(testData[0].RGB));
+    const [backgroundColour, setBackgroundColour] = useState<ColorValue>(RGB2rgb(testData[0]));
     const [infoData, setInfoData] = useState<Record<string, any>>({});
 
     useEffect(() => {
@@ -116,14 +117,20 @@ export default function ShowTrialDataScreen() {
             style={styles.container}
         >
             <StatusBar style={'dark'}/>
+            <View style={styles.munsellChip}>
+                <MunsellChip
+                    color={backgroundColour}
+                />
+            </View>
             <ScrollView
-                    style={[styles.trialList, {borderColor: backgroundColour}]}
-                    contentContainerStyle={[styles.trialListContent, {borderColor: backgroundColour}]}
-                >
+                showsVerticalScrollIndicator={false}
+                style={[styles.trialList, {borderColor: backgroundColour}]}
+                contentContainerStyle={[styles.trialListContent, {borderColor: backgroundColour}]}
+            >
                     <Text
                         selectable={true}
-                        style={[styles.text, {color: backgroundColour, marginVertical: 40}]}>
-                        Info: {JSON.stringify(infoData,null,4)}
+                        style={[styles.text, {color: backgroundColour}, styles.participantInfo]}>
+                        Info: {JSON.stringify(infoData,null,1)}
                     </Text>
                     <Text style={[styles.text, {color: backgroundColour}]}>TEST COLOURS</Text>
                     {
@@ -132,8 +139,7 @@ export default function ShowTrialDataScreen() {
                                 <DisplayColourButton
                                     key={`test-${index}`}
                                     index={index}
-                                    RGB={item.RGB}
-                                    targetColour={item.description}
+                                    RGB={item}
                                     displayIndex={index+1}
                                 />)
                         })
@@ -155,11 +161,6 @@ export default function ShowTrialDataScreen() {
                     }
                 <DebugButtons buttonRowStyle={{flexDirection: 'column'}}/>
                 </ScrollView>
-                <View style={styles.munsellChip}>
-                    <MunsellChip
-                        color={backgroundColour}
-                    />
-                </View>
         </SafeAreaView>
     );
 }
@@ -169,39 +170,52 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         flexDirection: 'row',
     },
+    participantInfo: {
+        marginVertical: 10
+    },
     trialList: {
-        maxWidth: '40%',
-        // borderWidth: 1,
         flex: 1,
     },
     trialListContent: {
+        maxWidth: 120,// 255.length()*3
+        //(Dimensions.get('window').width/2)-(100/2), //(screenWidth/2) - (munsell_chip_width/2) -(padding+margin)
         justifyContent: "center",
         alignItems: "flex-start",
         gap: 10,
-        margin: 10,
         borderWidth: 1,
-        padding: 10,
+        padding: 5,
     },
     trialSelector: {
         borderRadius: 10,
         borderWidth: 1,
         // borderColor: "lightgrey",
-        padding: 10,
+        padding: 5,
+        paddingVertical: 15,
+        width: '100%'
     },
     selectedTrial: {
         // backgroundColor: "darkgrey",
     },
     text: {
-        fontSize: 15,
+        fontFamily: 'ui-monospace',
+        // fontVariant: ['tabular-nums'],
+        fontSize: 9,
         fontWeight: "bold",
         color: "lightgrey",
     },
     munsellChip: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        // width: "100%",
+        // height: "100%",
+        // flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        flex: 1,
         // borderWidth: 1,
-        // borderColor: "lightgrey",
+        // borderColor: "blue",
     }
 
 });
