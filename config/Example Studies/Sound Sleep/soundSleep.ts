@@ -436,16 +436,18 @@ const audioTest: TaskDefinition = {
             {
                 key: 'audioTest',
                 type: 'audio',
-                file: require('../../../assets/sounds/counting_test.mp3'),
+                file: require('../../../assets/sounds/test_sound.mp3'),
                 question: '',
                 default: false, // autoplay
                 overwrite_parameter_from_storage: [{
                     parameter: 'volume',
                     task_id: 'setVolume',
                     response_key: 'setVolumeQuestion.volume'
-                }]
+                }],
+                required: true
             }
         ],
+        autosumbit_on_complete: true
     }
 
 export const soundSleepDefinition: ExperimentDefinition = {
