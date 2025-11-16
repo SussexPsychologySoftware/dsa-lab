@@ -20,6 +20,9 @@ class DataQueue {
     private getSendDataState: () => Promise<boolean | null> =
         () => Promise.resolve(experimentDefinition.send_data??null); // Default to true if not set
 
+    private getForceSendDataState: () => Promise<boolean | null> =
+        () => Promise.resolve(false); // Default to true if not set
+
     constructor() {
         this.processingPromise = null;
         this.initNetworkListener();
@@ -27,6 +30,10 @@ class DataQueue {
 
     public setSendDataStateGetter(getter: () => Promise<boolean | null>) {
         this.getSendDataState = getter;
+    }
+
+    public setForceSendDataStateGetter(getter: () => Promise<boolean | null>) {
+        this.getForceSendDataState = getter;
     }
 
     async getQueue(): Promise<QueueItem[]> {
@@ -76,6 +83,7 @@ class DataQueue {
         void this.processQueue();
     }
 
+    // TODO: perhaps a problem with the force send all approach - what if it can't be sent immediately and is sent later instead?
     async processQueue(): Promise<string> {
         // If already processing, return the existing promise
         if (this.processingPromise) {
@@ -98,6 +106,7 @@ class DataQueue {
         // TODO: check if send data currently on here, if not return 'send data off'
         const sendData = await this.getSendDataState();
         if(sendData === false) return 'Sending data is off';
+        const ignoreDelays = await this.getForceSendDataState();
 
         try {
             const queue = await this.getQueue();
@@ -108,7 +117,7 @@ class DataQueue {
             for (let i = queue.length - 1; i >= 0; i--) { // loop backwards to get oldest first
                 const item = queue[i];
                 try {
-                    if(item.sendAfter) {
+                    if(!ignoreDelays && item.sendAfter) {
                         const now = new Date();
                         const sendAfterTime = new Date(item.sendAfter)
                         if (now < sendAfterTime) {
