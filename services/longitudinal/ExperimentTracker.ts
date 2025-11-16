@@ -166,6 +166,22 @@ export class ExperimentTracker {
     }
 
     // ============ STOP EXPERIMENT ============
+    static async endExperiment(displayState: ExperimentDisplayState){
+        const state = await this.getState();
+        if (!state) return null;
+        state.experimentEnded = true;
+        state.forceSendData = true
+        await this.saveState(state);
+
+        const newDisplayState = {
+            ...displayState,
+            isExperimentComplete: true
+        };
+
+        await Notifications.cancelAllScheduledNotificationsAsync();
+        console.debug({state, displayState: newDisplayState});
+        return {state, displayState: newDisplayState}
+    }
 
      static async stopExperiment(): Promise<void> {
         // TODO: resetExperiment() also needed?
@@ -188,16 +204,6 @@ export class ExperimentTracker {
         if (!state) return null;
 
         state.notificationTimes = times; // Overwrite with the new object
-
-        await this.saveState(state); // Persist the change
-        return state;
-    }
-
-    static async updateSendData(sendData: boolean): Promise<ExperimentState | null> {
-        const state = await this.getState();
-        if (!state) return null;
-
-        state.sendData = sendData;
 
         await this.saveState(state); // Persist the change
         return state;
@@ -246,11 +252,38 @@ export class ExperimentTracker {
         return state;
     }
 
+    static async updateSendData(sendData: boolean): Promise<ExperimentState | null> {
+        const state = await this.getState();
+        if (!state) return null;
+
+        state.sendData = sendData;
+
+        await this.saveState(state); // Persist the change
+        return state;
+    }
+
     static async getSendDataState() {
         const state = await this.getState();
         if (!state) return null;
         return state.sendData ?? true;
     }
+
+    static async updateForceSendData(forceSend: boolean): Promise<ExperimentState | null> {
+        const state = await this.getState();
+        if (!state) return null;
+
+        state.forceSendData = forceSend;
+
+        await this.saveState(state); // Persist the change
+        return state;
+    }
+
+    static async getForceSendDataState() {
+        const state = await this.getState();
+        if (!state) return null;
+        return state.forceSendData ?? false; // or ignoreTimestamps
+    }
+
     // ============ TASK MANAGER ============
 
     // Need function to create daily tasks list
