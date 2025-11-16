@@ -9,6 +9,7 @@ import {Alert} from "react-native";
 import { useAutoRefresh } from '@/hooks/useAutoRefresh'
 import {NotificationService} from "@/services/NotificationService";
 import {RoutingService} from "@/services/RoutingService";
+import {dataQueue} from "@/services/data/dataQueue";
 
 // Define context type
 interface ExperimentContextType {
@@ -32,7 +33,7 @@ interface ExperimentContextType {
     resetTaskCompletion: () => Promise<void>;
     stopExperiment: () => Promise<void>;
     confirmAndStopExperiment: () => void;
-    // manuallyFinishExperiment: () => Promise<void>;
+    manuallyFinishExperiment: () => Promise<void>;
 
     loadExperimentState: () => Promise<void>;
 
@@ -384,15 +385,55 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         );
     }, [stopExperiment]); // Add dependency
 
-    // TODO: for debugging and participant manually ending experiment on last day, finish this:
+    // TODO: for debugging consider:
     // const forceSendData = useCallback(async () => {
-    //     //
-    // }, [])
-    //
-    // const manuallyFinishExperiment = useCallback(async () => {
-    //         const newDisplayState = {...displayState, isExperimentComplete: true};
-    //         // setDisplayState(newDisplayState)
-    // }, [displayState])
+    //     dataQueue.setForceSendDataStateGetter(()=>ExperimentTracker.getForceSendDataState());
+    //     await dataQueue.processQueue()
+    // }, [state])
+
+    const manuallyFinishExperiment = useCallback(async () => {
+        if (!state || !displayState) {
+            console.warn(`Cannot finish experiment: no state/display state`);
+            return undefined;
+        }
+        setIsActionLoading(true);
+        setActionError(null);
+        try {
+            const result = await ExperimentTracker.endExperiment(displayState);
+            if (result) {
+                const { state: newState, displayState: newDisplayState } = result;
+                setState(newState);
+                setDisplayState(newDisplayState);
+                dataQueue.setForceSendDataStateGetter(()=>ExperimentTracker.getForceSendDataState());
+                await dataQueue.processQueue()
+                const dataNotSent = await dataQueue.hasQueue()
+                if (dataNotSent) {
+                    Alert.alert(
+                        "Submission Queued",
+                        "Your final responses could not be sent to the server right now due to a network issue.",
+                        [
+                            { text: "OK", onPress: () => router.replace('/end') } // Navigate after they see the message
+                        ]
+                    );
+                } else {
+                    // router.replace('/end');
+                }
+            } else {
+                // if endExperiment returns null
+                throw new Error("Failed to end experiment: Could not retrieve state.");
+            }
+        } catch (error: any) {
+            console.error("Failed to finish experiment:", error);
+            setActionError(error.message || "An error occurred while finishing.");
+            // Also alert on a critical error
+            Alert.alert(
+                "Error",
+                "An unexpected error occurred while trying to finish the experiment. Please contact the study team."
+            );
+        } finally {
+            setIsActionLoading(false); // <-- Stop loading state
+        }
+    }, [displayState, state])
 
     // Create object to pass to context
     const value: ExperimentContextType = {
@@ -413,6 +454,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         setParticipantVariable,
         stopExperiment,
         confirmAndStopExperiment,
+        manuallyFinishExperiment,
         isActionLoading,
         actionError,
     };
