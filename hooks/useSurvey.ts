@@ -49,7 +49,7 @@ function initializeResponses(questions: SurveyComponent[]): Record<string, any> 
 async function restoreResponses(restoreKey: string){
     const data = await DataService.getData(restoreKey)
     if(!data) return null
-    return data
+    return data.responses
 }
 
 export function useSurvey(questions: SurveyComponent[] | undefined, onSubmit?: (data: object) => void, filename?: string) {
