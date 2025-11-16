@@ -2,9 +2,10 @@ import {useCallback, useEffect, useMemo, useState} from "react";
 import {Alert} from "react-native";
 import {displayOnlyTypes, SurveyComponent, SurveyDataType, SurveyQuestion} from '@/types/surveyQuestions'
 import {DataService} from "@/services/data/DataService";
+import {setNestedValue} from "@/utils/dotNotation";
 
 // useSurvey is a form manager which turns questions into responses, checks them, and triggers a save
-
+// TODO: use get and set nested responses throughout here
 interface MediaData {
     currentlyPlaying: boolean,
     time: number, //seconds
@@ -33,7 +34,7 @@ function initializeResponses(questions: SurveyComponent[]): Record<string, any> 
             });
         } else if (question.type === 'audio') {
             responses[key] = {
-                currentlyPlaying: question.default ?? false,
+                currentlyPlaying: question.default ?? false, // TODO: maybe default makes no sense here - use autoplay option if useful
                 // time: 0, //seconds - TODO: consider adding this?
                 volume: question.volume ?? 1,
                 finished: false
@@ -76,7 +77,6 @@ export function useSurvey(questions: SurveyComponent[] | undefined, onSubmit?: (
         setIsLoading(!!filename || questions.length === 0); // Re-set loading state
 
         if (!filename) {
-            console.log({filename, questions, initialResponses});
             setIsLoading(false);
             return;
         } else if (filename) {
@@ -135,22 +135,9 @@ export function useSurvey(questions: SurveyComponent[] | undefined, onSubmit?: (
         }
     }, [filename, questions]);
 
-    const updateResponses = useCallback((key: string, answer: SurveyDataType, nestedKey?: string) => {
+    const updateResponses = useCallback((key: string, answer: SurveyDataType) => {
         setResponses(prev => {
-            if (nestedKey) {
-                return {
-                    ...prev,
-                    [key]: {
-                        ...prev[key],
-                        [nestedKey]: answer
-                    }
-                };
-            }
-
-            return {
-                ...prev,
-                [key]: answer
-            };
+           return {...setNestedValue(prev, key, answer)} // Note must use a deep copy - if mutating original object than react assumes nothing changed
         });
 
         // Clear invalid status when user updates
@@ -197,7 +184,6 @@ export function useSurvey(questions: SurveyComponent[] | undefined, onSubmit?: (
                 // Handle conditional question
                 const isDisplayed = checkDisplayConditions(question)
                 if(!isDisplayed) continue
-
                 let isInvalid = false;
                 if (question.type === 'likertGrid') {
                     // Find the first empty statement
@@ -215,7 +201,7 @@ export function useSurvey(questions: SurveyComponent[] | undefined, onSubmit?: (
                     if (!firstInvalidQuestion) {
                         firstInvalidQuestion = question.label;
                     }
-                } else if (question.type === 'audio' && response !== 'finished') {
+                } else if (question.type === 'audio' && !response.finished) {
                     isInvalid = true;
                     if (!firstInvalidQuestion) {
                         firstInvalidQuestion = 'Please listen to the audio file above in full';
@@ -264,7 +250,7 @@ export function useSurvey(questions: SurveyComponent[] | undefined, onSubmit?: (
             } else {
                 totalQuestions += 1;
                 if(question.type === 'audio'){
-                    if(response === 'finished') answeredQuestions += 1;
+                    if(response?.finished) answeredQuestions += 1;
                 } else if (!isEmpty(response)) {
                     answeredQuestions += 1;
                 }

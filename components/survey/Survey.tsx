@@ -135,7 +135,7 @@ export default function Survey({
                             responses={responses[key]}
                             headerRepeatInterval={5}
                             onChange={(statementKey: string, answer: string) => {
-                                updateResponses(key, answer, statementKey);
+                                updateResponses(`${key}.${statementKey}`, answer);
                             }}
                             invalidStatements={invalidStatements}
                         />;
@@ -156,16 +156,17 @@ export default function Survey({
                                 isPlaying={responses[key].currentlyPlaying}
                                 onPress={() => {
                                     if (responses[key].finished) return;
-                                    updateResponses(key, !responses[key].currentlyPlaying, 'currentlyPlaying');
+                                    updateResponses(`${key}.currentlyPlaying`, !responses[key].currentlyPlaying);
                                 }}
-                                    if (responses[key] !== 'finished') {
-                                        updateResponses(key, 'finished', 'currentlyPlaying');
                                 onFinish={() => {
+                                    if (!responses[key].finished) {
+                                        updateResponses(`${key}.currentlyPlaying`, false);
+                                        updateResponses(`${key}.finished`, true);
                                     }
                                 }}
                                 volume={responses[key].volume}
                                 onVolumeChange={question.volumeControls ?
-                                    (newVolume) => updateResponses(key, newVolume,'volume') :
+                                    (newVolume) => updateResponses(`${key}.volume`, newVolume):
                                     undefined
                                 }
                             />
