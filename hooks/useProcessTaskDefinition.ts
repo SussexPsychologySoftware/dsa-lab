@@ -51,7 +51,13 @@ export function useProcessTaskDefinition(taskId?: string) {
                                     console.warn(`Could not construct filename for storage_taskId: ${params.task_id}`);
                                     continue; // Skip this one
                                 }
-                                const storedData = await DataService.getData(storageFilename);
+                                console.log({storageFilename})
+                                const storedDataFull = await DataService.getData(storageFilename);
+                                if(!storedDataFull) {
+                                    console.warn(`DataService: Could not find ${params.response_key} in ${storedDataFull} for ${question.key}, params: ${params}`);
+                                    continue
+                                }
+                                const storedData = storedDataFull.responses;
                                 if (storedData && typeof storedData === 'object' && hasNestedKey(storedData, params.response_key)) {
                                     (question as any)[params.parameter] = getNestedValue(storedData, params.response_key)
                                 } else {

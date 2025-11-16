@@ -268,7 +268,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
             participantId,
             // timestamp: new Date().toISOString(),
             taskId: taskId,
-            responses: data
+            responses: data // TODO: consider that data.responses needs to be extracted everywhere if not placing them at top level
         };
 
         if(experimentDefinition.total_days && experimentDefinition.total_days > 0) {
