@@ -410,7 +410,7 @@ export class ExperimentTracker {
             experimentDay,
             currentCondition,
             currentConditionIndex,
-            isExperimentComplete: this.hasExperimentEnded(state, allTasksCompleteToday && anyTasksEditable),
+            isExperimentComplete: this.hasExperimentEnded(state, allTasksCompleteToday && !anyTasksEditable),
             allTasksCompleteToday,
             tasks: taskDisplayStatuses
         };
