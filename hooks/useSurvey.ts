@@ -135,9 +135,23 @@ export function useSurvey(questions: SurveyComponent[] | undefined, onSubmit?: (
         }
     }, [filename, questions]);
 
-    const updateResponses = useCallback((key: string, answer: SurveyDataType) => {
+    const updateResponses = useCallback((key: string, answer: SurveyDataType, nestedKey?: string) => {
         setResponses(prev => {
-           return {...setNestedValue(prev, key, answer)} // Note must use a deep copy - if mutating original object than react assumes nothing changed
+            if (nestedKey) {
+                return {
+                    ...prev,
+                    [key]: {
+                        ...prev[key],
+                        [nestedKey]: answer
+                    }
+                };
+            }
+            // return {...setNestedValue(prev, key, answer)} // Note must use a deep copy - if mutating original object than react assumes nothing changed
+
+            return {
+                ...prev,
+                [key]: answer
+            };
         });
 
         // Clear invalid status when user updates

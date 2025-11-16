@@ -135,7 +135,7 @@ export default function Survey({
                             responses={responses[key]}
                             headerRepeatInterval={5}
                             onChange={(statementKey: string, answer: string) => {
-                                updateResponses(`${key}.${statementKey}`, answer);
+                                updateResponses(key, answer, statementKey); //note statements could contain '.' so can't use dot notation here. `${key}.${statementKey}`
                             }}
                             invalidStatements={invalidStatements}
                         />;
@@ -156,17 +156,17 @@ export default function Survey({
                                 isPlaying={responses[key].currentlyPlaying}
                                 onPress={() => {
                                     if (responses[key].finished) return;
-                                    updateResponses(`${key}.currentlyPlaying`, !responses[key].currentlyPlaying);
+                                    updateResponses(key, !responses[key].currentlyPlaying, 'currentlyPlaying'); //`${key}.currentlyPlaying`
                                 }}
                                 onFinish={() => {
                                     if (!responses[key].finished) {
-                                        updateResponses(`${key}.currentlyPlaying`, false);
-                                        updateResponses(`${key}.finished`, true);
+                                        updateResponses(key, false,'currentlyPlaying');//`${key}.currentlyPlaying`
+                                        updateResponses(key, true, 'finished'); //`${key}.finished`
                                     }
                                 }}
                                 volume={responses[key].volume}
                                 onVolumeChange={question.volumeControls ?
-                                    (newVolume) => updateResponses(`${key}.volume`, newVolume):
+                                    (newVolume) => updateResponses(key, newVolume, 'volume'): //`${key}.volume`
                                     undefined
                                 }
                             />
