@@ -9,12 +9,12 @@ interface Props {
     onPress: () => void;
     volume?: number;
     onVolumeChange?: (newVolume: number) => void,
-    onFinished?: () => void;
+    onFinish?: () => void;
     disabled?: boolean;
     resetOnPause?: boolean;
     onTimeChange?: (newTime: number) => void,
 }
-export default function AudioPlayer({audioSource, onPress, isPlaying, volume=1, onVolumeChange, onFinished, disabled, resetOnPause } : Props) {
+export default function AudioPlayer({audioSource, onPress, isPlaying, volume=1, onVolumeChange, onFinish, disabled, resetOnPause } : Props) {
     return (
         <View style={styles.container}>
             <Audio
@@ -22,7 +22,7 @@ export default function AudioPlayer({audioSource, onPress, isPlaying, volume=1, 
                 audioSource={audioSource}
                 isPlaying={isPlaying}
                 onPress={onPress}
-                onFinished={onFinished}
+                onFinish={onFinish}
                 volume={volume}
                 resetOnPause={resetOnPause}
             />

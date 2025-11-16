@@ -158,9 +158,9 @@ export default function Survey({
                                     if (responses[key].finished) return;
                                     updateResponses(key, !responses[key].currentlyPlaying, 'currentlyPlaying');
                                 }}
-                                onFinished={() => {
                                     if (responses[key] !== 'finished') {
                                         updateResponses(key, 'finished', 'currentlyPlaying');
+                                onFinish={() => {
                                     }
                                 }}
                                 volume={responses[key].volume}

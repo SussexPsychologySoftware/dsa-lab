@@ -23,7 +23,7 @@ interface AudioProps {
     isPlaying: boolean,
     resetOnPause?: boolean,
     onPress: ()=>void,
-    onFinished?: () => void,
+    onFinish?: () => void,
     volume?: number,
     style?: object,
     disabled?: boolean,
@@ -35,7 +35,7 @@ export default function Audio({
                                   isPlaying,
                                   onPress,
                                   resetOnPause,
-                                  onFinished,
+                                  onFinish,
                                   volume,
                                   style,
                                   disabled,
@@ -79,10 +79,10 @@ export default function Audio({
     // AUDIO PLAYER STATUS ------------------
     const { didJustFinish, currentTime, duration } = useAudioPlayerStatus(player);
     // Make sure onFinish() only runs once but tracking it's function reference
-    const onFinishedRef = useRef(onFinished);
+    const onFinishedRef = useRef(onFinish);
     useEffect(() => { // Keep updated with last callback on every render
-        onFinishedRef.current = onFinished;
-    }, [onFinished]);
+        onFinishedRef.current = onFinish;
+    }, [onFinish]);
 
     useEffect(() => {
         if (didJustFinish && onFinishedRef.current) {
