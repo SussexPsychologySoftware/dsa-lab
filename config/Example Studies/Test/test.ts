@@ -40,7 +40,7 @@ const ExampleSurveyQuestions: SurveyQuestion[] = [
         key: 'age',
         question: 'What is your age?',
         required: true,
-        type: "number",
+        type: "text",
     },
     {
         key: 'gender',
@@ -122,10 +122,11 @@ const ExampleSurveyQuestions: SurveyQuestion[] = [
     }
 ];
 
-export const experimentDefinition: ExperimentDefinition = {
+export const testExperiment: ExperimentDefinition = {
     name: 'Experiment',
-    total_days: 14,
+    total_days: 0,
     cutoff_hour: 4,
+    debug: true,
     conditions: {
         conditions: ['control', 'monaural', 'binaural'],
         repeatedMeasures: true,
@@ -144,11 +145,20 @@ export const experimentDefinition: ExperimentDefinition = {
             name: 'Defined survey',
             type: 'survey',
             prompt: 'Here it is:',
-            questions: ExampleSurveyQuestions,
+            questions: [    {
+                key: 'content',
+                question: 'On a scale of 0-1, how content are you?',
+                type: 'slider',
+                default: .5,
+                min: 0,
+                max: 1,
+                step: .1,
+                labels: ['Content', 'Neither content nor uncontent', 'Uncontent']
+            }],
             show_on_days: [0,1,2,3],
             datapipe_id: 'dOS0nQ93xCSV',
             show_for_conditions: [],
-            allow_edit: false,
+            allow_edit: true,
             notification: {
                 prompt: 'Daily survey:',
             },
@@ -165,20 +175,20 @@ export const experimentDefinition: ExperimentDefinition = {
             // conditional_on_tasks: ['eveningDiary']
             // allow_edit: true
         },
-        {
-            type: 'screen',
-            id: 'surveyExample2',
-            name: 'Example Survey Custom screen',
-            prompt: 'Here it is:',
-            path_to_screen: '/surveyExample',
-            show_on_days: [0, 1, 2, 3],
-            datapipe_id: 'dOS0nQ93xCSV',
-            show_for_conditions: ['control'], //only show if condition is 'control'
-            allow_edit: true,
-            notification: {
-                prompt: 'Other survey:',
-                default_time: '12:30',
-            }
-        }
+        // {
+        //     type: 'screen',
+        //     id: 'surveyExample2',
+        //     name: 'Example Survey Custom screen',
+        //     prompt: 'Here it is:',
+        //     path_to_screen: '/surveyExample',
+        //     show_on_days: [0, 1, 2, 3],
+        //     datapipe_id: 'dOS0nQ93xCSV',
+        //     show_for_conditions: ['control'], //only show if condition is 'control'
+        //     allow_edit: true,
+        //     notification: {
+        //         prompt: 'Other survey:',
+        //         default_time: '12:30',
+        //     }
+        // }
     ]
 }
