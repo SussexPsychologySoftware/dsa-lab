@@ -9,7 +9,9 @@ interface BaseExperimentState {
     sendData?: boolean;
     tasksLastCompletionDate: NullableStringRecord;
     notificationTimes: NullableStringRecord;
-    participantVariables?: Record<string, any>; // <-- ADD THIS
+    participantVariables?: Record<string, any>;
+    experimentEnded?: boolean; // Add this to persist experiment ended quicker?
+    forceSendData?: boolean; // Add this to allow forcing sending data despite any delays.
 }
 
 // Change here to allow for no condition
