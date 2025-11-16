@@ -1,4 +1,4 @@
-import {Text, StyleSheet, AppState} from "react-native";
+import {Text, StyleSheet, AppState, Pressable, View} from "react-native";
 import {StandardView} from "@/components/layout/StandardView";
 import ToDoList from "@/components/longitudinal/ToDoList";
 import { useExperiment } from "@/context/ExperimentContext";
@@ -8,9 +8,10 @@ import {router, useFocusEffect} from "expo-router";
 import React, {useEffect} from "react";
 import {RoutingService} from "@/services/RoutingService";
 import {useAutoRefresh} from "@/hooks/useAutoRefresh";
+import {ExperimentTracker} from "@/services/longitudinal/ExperimentTracker";
 
 export default function Index() {
-    const { displayState, isLoading, definition, loadExperimentState } = useExperiment();
+    const { displayState, isLoading, definition, loadExperimentState, manuallyFinishExperiment } = useExperiment();
     useAutoRefresh({
         onRefresh: loadExperimentState,
         refreshOnMount: false, // Context already did the initial load
@@ -56,10 +57,10 @@ export default function Index() {
         >
             <Text style={globalStyles.pageTitle}>{definition.total_days ? "Today's activities" : 'Please complete the following tasks:'}</Text>
             {
-                definition.total_days &&
+                definition.total_days!==undefined && // without !== undefined causes Text strings outside component
                 <Text style={[globalStyles.standardText, {alignSelf: 'center'}]}>
                     {
-                        displayState.experimentDay+1 === definition.total_days+1 ?
+                        displayState.experimentDay === definition.total_days ?
                             'Last experiment day' :
                             `Day ${displayState.experimentDay+1} / ${definition.total_days+1}`
                     }
@@ -69,8 +70,25 @@ export default function Index() {
             {
                 displayState.allTasksCompleteToday &&
                 <Text style={[globalStyles.standardText, styles.allTasksCompleteToday]}>
-                    ✓ All activities completed {definition.total_days && 'for today'}
+                    ✓ All activities completed {definition.total_days ? 'for today' : ''}
                 </Text>
+            }
+
+            {
+                displayState.allTasksCompleteToday && displayState.experimentDay === definition.total_days &&
+                <View style={styles.finishExperimentCard}>
+                    <Text style={[globalStyles.standardText, styles.finishExperimentText]}>
+                        Click the button below to submit your responses and finish the experiment
+                    </Text>
+                    <SubmitButton
+                        text={"Submit & Finish Experiment"}
+                        disabledText={'Submitting...'}
+                        onPress={async()=>{await manuallyFinishExperiment()}}
+                        style={styles.finishExperimentButton}
+                        textStyle={styles.finishExperimentButtonText}
+                    />
+                </View>
+
             }
 
             <ToDoList
@@ -127,5 +145,30 @@ const styles = StyleSheet.create({
         padding: 10,
         color: 'green',
         backgroundColor: 'rgba(0, 255, 0, 0.05)',
+    },
+    finishExperimentCard: {
+        alignSelf: 'center',
+        borderWidth: 3,
+        borderColor: 'yellow',
+        // backgroundColor: 'yellow',
+        color: 'black',
+        borderRadius: 10,
+        marginTop: 15,
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        gap: 10,
+        maxWidth: 400
+    },
+    finishExperimentText: {
+        textAlign: 'center',
+        color: 'yellow',
+        fontWeight: 500
+    },
+    finishExperimentButton: {
+        backgroundColor: 'yellow',
+    },
+    finishExperimentButtonText: {
+        color: 'black',
+        textAlign: 'center',
     }
 });
