@@ -332,6 +332,7 @@ export const colourAdjuster: ExperimentDefinition = {
             prompt: 'Complete Survey',
             questions: mainSurvey,
             datapipe_id: '4s7WE6aDDG5Y',
+            skippable: true,
             skip_if: {
                 state_key: 'participantVariables.device.deviceType',
                 operator: '!=',
