@@ -6,7 +6,7 @@ import {
     TextInput,
     View,
     Text,
-    KeyboardTypeOptions
+    KeyboardTypeOptions, StyleSheet
 } from "react-native";
 import {globalStyles} from "@/styles/appStyles";
 import {useState} from "react";
@@ -60,27 +60,38 @@ export default function Textbox({ value, placeholder, onChange, maxLength, multi
             { // Include custom done button in top bar on iOS
                 Platform.OS === 'ios' &&
                 <InputAccessoryView nativeID={inputAccessoryViewID}
-                                    style={{backgroundColor: 'white'}}
+                                    style={styles.inputAccessory}
+                                    backgroundColor='#c8cbcd'
                 >
-                    <View style={{
-                        backgroundColor: '#c8cbcd', // Roughly iOS ish for now TODO: improve
-                    }}
+                    <Pressable
+                        onPress={Keyboard.dismiss}
+                        style={styles.pressable}
                     >
-                        <Pressable onPress={()=>Keyboard.dismiss()}>
-                            <Text style={{
-                                color: '#007AFF',
-                                fontSize: 17,
-                                fontWeight: '500',
-                                textAlign: 'right',
-                                padding: 12
-                            }}
-                            >
-                                Done
-                            </Text>
-                        </Pressable>
-                    </View>
+                        <Text style={styles.text}
+                        >
+                            Done
+                        </Text>
+                    </Pressable>
                 </InputAccessoryView>
             }
         </>
     )
 }
+
+const styles = StyleSheet.create({
+    inputAccessory: {
+    },
+    pressable: {
+        alignSelf: 'flex-end',
+        // borderWidth: 1,
+        // borderColor: 'red',
+    },
+    text: {
+        color: '#007AFF',
+        fontSize: 17,
+        fontWeight: '500',
+        // textAlign: 'right',
+        padding: 12
+    }
+
+})
