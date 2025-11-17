@@ -133,6 +133,15 @@ export default function SurveyScreen() {
                 {surveyTitle}
             </Text>
             <View style={styles.inputsContainer}>
+                {
+                    taskDefinition.skippable &&
+                    <SubmitButton
+                        text='Click here to skip this page'
+                        onPress={async ()=>{
+                            await submitTaskData(taskDefinition,'skipped')
+                        }}
+                    />
+                }
                 {/* TODO: add a 'group' or 'page' property to SurveyQuestion type and render the survey in sections dynamically.*/}
                 {/*<Text style={globalStyles.sectionTitle}>Please fill out the following survey</Text>*/}
                 <Survey
