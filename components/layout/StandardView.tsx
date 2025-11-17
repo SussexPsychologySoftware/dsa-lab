@@ -61,6 +61,7 @@ export const StandardView = ({
                 edges={headerShown ? ['left', 'right'] : ['top', 'left', 'right','bottom']}
             >
                 <StatusBar style={statusBarStyle}/>
+                {/*TODO: Note KeyboardAvoidingView should probably be the outer wrapper*/}
                 <KeyboardAvoidingView
                     behavior={keyboardBehavior}
                     style={[styles.keyboardAvoidingView, styles.innerContainer, keyboardAvoidingViewStyle, innerContainer]}
