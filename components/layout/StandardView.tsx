@@ -13,7 +13,7 @@ import {experimentDefinition} from "@/config/experimentDefinition";
 
 export const StandardView = ({
                                  children,
-                                 statusBarStyle = 'dark',
+                                 statusBarStyle = 'light',
                                  keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined,
                                  headerShown = true,
                                  safeAreaStyle,
@@ -22,7 +22,8 @@ export const StandardView = ({
                                  scrollViewStyle,
                                  refreshState,
                                  refreshing,
-                                 debug
+                                 debug,
+                                 innerContainer
                               }:
                               {
                                   children?: any,
@@ -35,58 +36,75 @@ export const StandardView = ({
                                   scrollViewStyle?: object,
                                   refreshState?: () => Promise<void>,
                                   refreshing?: boolean,
-                                  debug?: boolean
+                                  debug?: boolean,
+                                  innerContainer?: object
                               }) => {
 
     return (
-        <SafeAreaView
-            style={[styles.outerContainer, safeAreaStyle]}
-            // Deal with padding manually as component a little broken
-            edges={headerShown ? ['left', 'right'] : ['top', 'left', 'right']}
+        <ScrollView
+            style={[styles.outerContainer, styles.scrollView, scrollViewStyle]}
+            contentContainerStyle={[styles.scrollViewContentContainer, contentContainerStyle]}
+            // keyboardShouldPersistTaps="handled"
+            // keyboardDismissMode='on-drag' // dismiss keyboard on drag
+            refreshControl={refreshState &&
+                <RefreshControl
+                    refreshing={refreshing??false}
+                    onRefresh={refreshState}
+                    tintColor="#fff" // For iOS
+                    colors={['#fff']} // For Android
+                />
+            }
         >
-            <StatusBar style={statusBarStyle}/>
-            <KeyboardAvoidingView
-                behavior={keyboardBehavior}
-                style={[styles.keyboardAvoidingView, keyboardAvoidingViewStyle]}
+            <SafeAreaView
+                style={[styles.safeArea, safeAreaStyle]}
+                // Deal with padding manually as component a little broken
+                edges={headerShown ? ['left', 'right'] : ['top', 'left', 'right','bottom']}
             >
-                {/*<TouchableWithoutFeedback onPress={Keyboard.dismiss}>*/}
-                <ScrollView
-                    contentContainerStyle={[styles.scrollViewContentContainer, contentContainerStyle]}
-                    style={[styles.scrollView, scrollViewStyle]}
-                    keyboardShouldPersistTaps="handled"
-                    refreshControl={refreshState &&
-                        <RefreshControl
-                            refreshing={refreshing??false}
-                            onRefresh={refreshState}
-                            tintColor="#fff" // For iOS
-                            colors={['#fff']} // For Android
-                        />
-                    }
+                <StatusBar style={statusBarStyle}/>
+                <KeyboardAvoidingView
+                    behavior={keyboardBehavior}
+                    style={[styles.keyboardAvoidingView, styles.innerContainer, keyboardAvoidingViewStyle, innerContainer]}
                 >
+                    {/*<TouchableWithoutFeedback onPress={Keyboard.dismiss}>*/}
                     {children}
                     {experimentDefinition.debug && debug !== false && <Debug/> }
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     outerContainer: {
-        // flex: 1,
         backgroundColor: colours.background,
-    },
-    keyboardAvoidingView: {
-        // flex: 1,
+        minHeight: '100%', //or flexGrow: 1?
+        maxWidth: '100%',
+        // borderWidth: 1,
+        // borderColor: 'blue',
+        flex: 1,
     },
     scrollViewContentContainer: {
         // Pad inner content so scroll bar is pushed to right name of screen
-        paddingHorizontal: 20,
-        paddingBottom: 20,
-
+        paddingHorizontal: 10,
+        // paddingBottom: 20,
+        // flex: 1,
     },
     scrollView: {
-        minHeight: '100%', //or flexGrow: 1?
-        maxWidth: '100%',
+        // flex: 1,
+        // borderColor: 'red',
+        // borderWidth: 1,
+    },
+    safeArea: {
+        minHeight: '100%',
+        width: '100%',
+        // borderColor: 'blue',
+        // borderWidth: 1,
+    },
+    keyboardAvoidingView: {
+    },
+    innerContainer: {
+        // borderColor: 'red',
+        // borderWidth: 1,
+        // flex: 1,
     }
 })
