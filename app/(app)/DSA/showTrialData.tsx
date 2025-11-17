@@ -1,4 +1,13 @@
-import {Text, View, StyleSheet, Pressable, ScrollView, ColorValue, Dimensions} from "react-native";
+import {
+    Text,
+    View,
+    StyleSheet,
+    Pressable,
+    ScrollView,
+    ColorValue,
+    Dimensions,
+    TouchableWithoutFeedback, TouchableOpacity
+} from "react-native";
 import React, {useEffect, useState} from "react";
 import {LAB, LCH, RGB} from "@/types/colours";
 import {useExperiment} from "@/context/ExperimentContext";
@@ -31,6 +40,8 @@ export default function ShowTrialDataScreen() {
     const { displayState, getTaskFilename } = useExperiment();
     const [trialData, setTrialData] = useState<Trial[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [showTrialList, setShowTrialList] = useState(false);
+
     const testData: RGB[] = [
         {r:255, g:255, b:255},
         {r:255, g:0, b:0},
@@ -117,50 +128,57 @@ export default function ShowTrialDataScreen() {
             style={styles.container}
         >
             <StatusBar style={'dark'}/>
-            <View style={styles.munsellChip}>
-                <MunsellChip
-                    color={backgroundColour}
-                />
-            </View>
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                style={[styles.trialList, {borderColor: backgroundColour}]}
-                contentContainerStyle={[styles.trialListContent, {borderColor: backgroundColour}]}
+            <TouchableOpacity
+                onPress={()=>{setShowTrialList(!showTrialList)}}
+                style={styles.munsellChip}
             >
-                    <Text
-                        selectable={true}
-                        style={[styles.text, {color: backgroundColour}, styles.participantInfo]}>
-                        Info: {JSON.stringify(infoData,null,1)}
-                    </Text>
-                    <Text style={[styles.text, {color: backgroundColour}]}>TEST COLOURS</Text>
-                    {
-                        testData.map((item, index) =>{
-                            return(
-                                <DisplayColourButton
-                                    key={`test-${index}`}
-                                    index={index}
-                                    RGB={item}
-                                    displayIndex={index+1}
-                                />)
-                        })
-                    }
-                    <Text style={[styles.text,{color: backgroundColour}]}>TRIAL DATA</Text>
-                    { trialData &&
-                        trialData.map((item, index) => {
-                            // console.log(item);
-                            return(
-                                <DisplayColourButton
-                                    key={`trial-${index}`}
-                                    index={index+testData.length}
-                                    RGB={item.response.RGB} //item.RGB
-                                    displayIndex={index+1}
-                                />
-                            )
+                    <MunsellChip
+                        color={backgroundColour}
+                    />
+            </TouchableOpacity>
+            {
+                showTrialList &&
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        style={[styles.trialList, {borderColor: backgroundColour}]}
+                        contentContainerStyle={[styles.trialListContent, {borderColor: backgroundColour}]}
+                    >
+                        <Text
+                            selectable={true}
+                            style={[styles.text, {color: backgroundColour}, styles.participantInfo]}>
+                            Info: {JSON.stringify(infoData,null,1)}
+                        </Text>
+                        <Text style={[styles.text, {color: backgroundColour}]}>TEST COLOURS</Text>
+                        {
+                            testData.map((item, index) =>{
+                                return(
+                                    <DisplayColourButton
+                                        key={`test-${index}`}
+                                        index={index}
+                                        RGB={item}
+                                        displayIndex={index+1}
+                                    />)
+                            })
+                        }
+                        <Text style={[styles.text,{color: backgroundColour}]}>TRIAL DATA</Text>
+                        { trialData &&
+                            trialData.map((item, index) => {
+                                // console.log(item);
+                                return(
+                                    <DisplayColourButton
+                                        key={`trial-${index}`}
+                                        index={index+testData.length}
+                                        RGB={item.response.RGB} //item.RGB
+                                        displayIndex={index+1}
+                                    />
+                                )
 
-                        })
-                    }
-                <DebugButtons buttonRowStyle={{flexDirection: 'column'}}/>
-                </ScrollView>
+                            })
+                        }
+                        <DebugButtons buttonRowStyle={{flexDirection: 'column'}}/>
+                    </ScrollView>
+            }
+
         </SafeAreaView>
     );
 }
@@ -169,12 +187,17 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'black',
         flexDirection: 'row',
+        flex: 1,
     },
     participantInfo: {
         marginVertical: 10
     },
     trialList: {
-        flex: 1,
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: 99,
     },
     trialListContent: {
         maxWidth: 120,// 255.length()*3
@@ -209,9 +232,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        // width: "100%",
-        // height: "100%",
-        // flex: 1,
         alignItems: "center",
         justifyContent: "center",
         // borderWidth: 1,
