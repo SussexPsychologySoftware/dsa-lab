@@ -131,6 +131,7 @@ export interface ExperimentDefinition {
     conditions?: ConditionDefinition;
     tasks: TaskDefinition[];
     send_data?: boolean;
+    end_text?: string;
     // Other ideas
     // blocks?: {
     //     names: [],

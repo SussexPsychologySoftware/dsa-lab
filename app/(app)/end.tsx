@@ -5,6 +5,7 @@ import {StandardView} from "@/components/layout/StandardView";
 import {dataQueue} from "@/services/data/dataQueue";
 import {useEffect, useState} from "react";
 import SubmitButton from "@/components/inputs/SubmitButton";
+import {experimentDefinition} from "@/config/experimentDefinition";
 
 export default function EndScreen() {
     const { state } = useExperiment();
@@ -51,7 +52,7 @@ export default function EndScreen() {
             headerShown={false}
             statusBarStyle={'light'}
         >
-            <Text style={globalStyles.standardText}>The experiment is now over - you may contact the experimenter with any further queries.</Text>
+            <Text style={globalStyles.standardText}>The experiment is now over.</Text>
             {hasQueue && (
                 <View style={styles.syncCard}>
                     <Text style={[globalStyles.standardText, styles.syncWarningText]}>
@@ -75,7 +76,18 @@ export default function EndScreen() {
                     ✓ All your data has been successfully submitted.
                 </Text>
             )}
-            <Text selectable={true} style={globalStyles.standardText}>Your Participant ID is: {state?.participantId}</Text>
+            {
+                experimentDefinition.end_text &&
+                <Text style={[globalStyles.standardText]}>
+                    {experimentDefinition.end_text}
+                </Text>
+            }
+            <View style={{flexDirection: 'row', gap: 5}}>
+                <Text style={globalStyles.standardText}>Your Participant ID is:</Text>
+                <Text selectable={true} style={globalStyles.standardText}>
+                    {state?.participantId}
+                </Text>
+            </View>
         </StandardView>
     );
 }

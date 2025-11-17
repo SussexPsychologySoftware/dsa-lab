@@ -127,6 +127,10 @@ export const testExperiment: ExperimentDefinition = {
     total_days: 0,
     cutoff_hour: 4,
     debug: true,
+    autoroute: true,
+    end_text: `Thank you for your participation in this study.
+    
+Please contact me at [email] with any further queries.`,
     conditions: {
         conditions: ['control', 'monaural', 'binaural'],
         repeatedMeasures: true,
