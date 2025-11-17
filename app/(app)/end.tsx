@@ -45,7 +45,7 @@ export default function EndScreen() {
 
     return (
         <StandardView
-            contentContainerStyle={{
+            innerContainer={{
                 marginVertical: 40,
                 gap: 30
             }}

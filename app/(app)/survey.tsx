@@ -129,7 +129,7 @@ export default function SurveyScreen() {
             headerShown={true}
             statusBarStyle={'dark'}
         >
-            <Text style={[globalStyles.pageTitle, {marginVertical: 30}]}>
+            <Text style={[globalStyles.pageTitle, {paddingVertical: 30}]}>
                 {surveyTitle}
             </Text>
             <View style={styles.inputsContainer}>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, TextInput} from 'react-native';
+import {Text, StyleSheet, TextInput, View} from 'react-native';
 import { StandardView } from '@/components/layout/StandardView';
 import { useExperiment } from '@/context/ExperimentContext';
 import { router } from 'expo-router';
@@ -24,7 +24,7 @@ export default function WelcomeScreen() {
 
     return (
         <StandardView
-            contentContainerStyle={styles.container}
+            innerContainer={styles.container}
             headerShown={false}
             statusBarStyle={'light'}
             debug={false}
@@ -63,9 +63,13 @@ export default function WelcomeScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        justifyContent: 'center',
+        // minHeight: '100%',
+        gap: 30,
         alignItems: 'center',
-        gap: 30
+        justifyContent: 'center',
+        flex: 1,
+
+        // borderWidth: 1,
+        borderColor: 'blue',
     },
 });
