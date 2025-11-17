@@ -72,6 +72,7 @@ interface TaskDefinitionBasic {
     autosumbit_on_complete?: boolean;
     on_submit_actions?: StateUpdateAction[];
     skip_if?: SkipAction;
+    skippable?: boolean;
     // overwrite_parameters_on_load?: OverwriteDataOptions[] // TODO: something like this could work?
 
     // Other ideas
