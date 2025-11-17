@@ -111,14 +111,14 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
     // Navigate if experiment completed
     useEffect(() => {
         // Don't navigate while loading/refreshing or no display state
-        if (loading || !displayState) {
+        if (loading || !displayState || !state) {
             return;
         }
 
-        if (displayState.isExperimentComplete) {
+        if (state.experimentEnded || displayState.isExperimentComplete) {
             router.replace('/end');
         }
-    }, [displayState, loading]);
+    }, [displayState, loading, state]);
 
     const startExperiment = useCallback(async (participantId?: string, overrideCondition?: string) => {
         setIsActionLoading(true);
@@ -410,13 +410,13 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
                 if (dataNotSent) {
                     Alert.alert(
                         "Submission Queued",
-                        "Your final responses could not be sent to the server right now due to a network issue.",
+                        "Your final responses could not be sent to the server right now due to a network issue. Please return to the app in future to make sure the data has sent.",
                         [
-                            { text: "OK", onPress: () => router.replace('/end') } // Navigate after they see the message
+                            { text: "OK"}
                         ]
                     );
                 } else {
-                    // router.replace('/end');
+                    // router.replace('/end'); // Let routing happen elsewhere
                 }
             } else {
                 // if endExperiment returns null
