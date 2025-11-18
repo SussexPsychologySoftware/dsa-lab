@@ -34,7 +34,7 @@ export default function RadioList({options, value, onSelect, containerStyle} : {
 
 const styles = StyleSheet.create({
     container: {
-        gap: 10,
+        gap: 5,
     },
     optionContainer: {
         flexDirection: 'row',
