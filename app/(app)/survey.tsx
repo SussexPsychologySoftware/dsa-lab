@@ -127,23 +127,9 @@ export default function SurveyScreen() {
     return (
         <StandardView
             headerShown={true}
-            statusBarStyle={'dark'}
+            innerContainer={styles.inputsContainer}
         >
-            <Text style={[globalStyles.pageTitle, {paddingVertical: 30}]}>
-                {surveyTitle}
-            </Text>
             <View style={styles.inputsContainer}>
-                {
-                    taskDefinition.skippable &&
-                    <SubmitButton
-                        text='Click here to skip this page'
-                        onPress={async ()=>{
-                            await submitTaskData(taskDefinition,'skipped')
-                        }}
-                    />
-                }
-                {/* TODO: add a 'group' or 'page' property to SurveyQuestion type and render the survey in sections dynamically.*/}
-                {/*<Text style={globalStyles.sectionTitle}>Please fill out the following survey</Text>*/}
                 <Survey
                     key={taskId} // Note using a key here forces react to tear down the survey and recreate when taskId changes.
                     questions={questions}
@@ -154,6 +140,14 @@ export default function SurveyScreen() {
                     isSubmitting={isSubmitting}
                     // progress={progress}
                     invalidQuestions={invalidQuestions}
+            <Stack.Screen
+                options={{
+                    title: surveyTitle,
+                    headerRight: taskDefinition.skippable ?
+                        () => <Button onPress={async () => await submitTaskData(taskDefinition,'skipped')} title="Skip" />
+                    : undefined,
+                }}
+            />
                 />
 
                 <SubmitButton
@@ -180,6 +174,7 @@ export default function SurveyScreen() {
 
 const styles = StyleSheet.create({
     inputsContainer: {
-        gap: 10
+        gap: 10,
+        marginTop: 20,
     },
 });
