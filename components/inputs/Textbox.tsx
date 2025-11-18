@@ -21,7 +21,7 @@ export default function Textbox({ value, placeholder, onChange, maxLength, multi
     style?: object;
 }){
     // controlled component, no internal state
-    const [inputAccessoryViewID] = useState(() => `multiline-input-accessory-${Math.random()}`);
+    const [inputAccessoryViewID] = useState(() => `input-accessory-${Math.random()}`);
 
     function extractNumbers(response: string){
         // Remove non-numeric characters
@@ -41,6 +41,8 @@ export default function Textbox({ value, placeholder, onChange, maxLength, multi
         onChange(response);
     }
 
+    const showAccessory = Platform.OS === 'ios' && !multiline; // Logic here to keep JSX clean
+
     return (
         <>
             <TextInput
@@ -51,17 +53,17 @@ export default function Textbox({ value, placeholder, onChange, maxLength, multi
                 placeholderTextColor={'grey'}
                 style={[globalStyles.input, style]}
                 onChangeText={text => handleInput(text)}
-                inputAccessoryViewID={inputAccessoryViewID}
+                inputAccessoryViewID={showAccessory ? inputAccessoryViewID : undefined}
                 maxLength={maxLength}
                 disableFullscreenUI={true}
                 keyboardAppearance="dark"
                 returnKeyType={multiline ? undefined : 'done'} // Note: a little broken on ios so handle manually for now
             />
-            { // Include custom done button in top bar on iOS
-                Platform.OS === 'ios' &&
+            { showAccessory &&
                 <InputAccessoryView nativeID={inputAccessoryViewID}
                                     style={styles.inputAccessory}
                                     backgroundColor='#c8cbcd'
+
                 >
                     <Pressable
                         onPress={Keyboard.dismiss}
