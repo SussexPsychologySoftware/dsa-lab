@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
     },
     footerContainer: {
         gap: 15,
-        marginTop: 20,
     },
     conditionalQuestion: {
         marginTop: -5,
