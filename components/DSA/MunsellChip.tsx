@@ -1,13 +1,30 @@
 import React from 'react';
 import {View, StyleSheet, ColorValue} from 'react-native';
 
-export default function MunsellChip({ color }: { color: ColorValue }) {
+export default function MunsellChip({ color, height, width }: { color: ColorValue, height?: number, width?: number }) {
     return (
         <View style={styles.chipContainer}>
-            {/* main rectangle */}
-            <View style={[styles.mainRect, { backgroundColor: color }]} />
-            {/* small tab, absolutely positioned relative to the container */}
-            <View style={[styles.tab, { backgroundColor: color }]} />
+            <View style={
+                    [
+                        styles.mainRect,
+                        {
+                            backgroundColor: color,
+                            height: height ?? 120,
+                            width: width ?? 100,
+                        }
+                    ]
+                }
+            />
+            <View style={
+                    [
+                        styles.tab,
+                        {
+                            backgroundColor: color,
+                            // Allow tab size control too?
+                        }
+                    ]
+                }
+            />
         </View>
     );
 }
