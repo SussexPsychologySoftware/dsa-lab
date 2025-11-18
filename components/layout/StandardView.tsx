@@ -13,10 +13,10 @@ import {experimentDefinition} from "@/config/experimentDefinition";
 
 export const StandardView = ({
                                  children,
+                                 // NOTE: keyboard avoiding view causes a lot of issues -
+                                 // height on ios helps with orientation changes, and undefined for android stops a flicker on surveys
                                  keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined,
                                  statusBarStyle = 'inverted',
-                                    // NOTE: keyboard avoiding view causes a lot of issues -
-                                    // height on ios helps with orientation changes, and undefined for android stops a flicker on surveys
                                  headerShown = true,
                                  safeAreaStyle,
                                  keyboardAvoidingViewStyle,
@@ -42,38 +42,42 @@ export const StandardView = ({
                                   innerContainer?: object
                               }) => {
 
+    // Note order here is important: If KAV is in SV will add lots to screen height
+    // If SAV is outside SV, will block content from scrolling under the status bar (if desireable)
     return (
-        <ScrollView
-            style={[styles.outerContainer, styles.scrollView, scrollViewStyle]}
-            contentContainerStyle={[styles.scrollViewContentContainer, contentContainerStyle]}
-            // keyboardShouldPersistTaps="handled"
-            // keyboardDismissMode='on-drag' // dismiss keyboard on drag
-            refreshControl={refreshState &&
-                <RefreshControl
-                    refreshing={refreshing??false}
-                    onRefresh={refreshState}
-                    tintColor="#fff" // For iOS
-                    colors={['#fff']} // For Android
-                />
-            }
+        <KeyboardAvoidingView
+            behavior={keyboardBehavior}
+            style={[styles.keyboardAvoidingView,styles.outerContainer, keyboardAvoidingViewStyle]}
         >
-            <SafeAreaView
-                style={[styles.safeArea, safeAreaStyle]}
-                // Deal with padding manually as component a little broken
-                // edges={headerShown ? ['left', 'right'] : ['top', 'left', 'right','bottom']}
+            <StatusBar style={statusBarStyle}/>
+            <ScrollView
+                style={[styles.scrollView, scrollViewStyle]}
+                contentContainerStyle={[styles.scrollViewContentContainer, contentContainerStyle]}
+                // keyboardShouldPersistTaps="handled"
+                // keyboardDismissMode='on-drag' // dismiss keyboard on drag
+                refreshControl={refreshState &&
+                    <RefreshControl
+                        refreshing={refreshing??false}
+                        onRefresh={refreshState}
+                        tintColor="#fff" // For iOS
+                        colors={['#fff']} // For Android
+                        progressViewOffset={30}
+                    />
+                }
             >
-                <StatusBar style={statusBarStyle}/>
-                {/*TODO: Note KeyboardAvoidingView should probably be the outer wrapper*/}
-                <KeyboardAvoidingView
-                    behavior={keyboardBehavior}
-                    style={[styles.keyboardAvoidingView, styles.innerContainer, keyboardAvoidingViewStyle, innerContainer]}
+                <SafeAreaView
+                    style={[styles.safeArea, safeAreaStyle,  styles.innerContainer, innerContainer]}
+                    // Deal with padding manually as component a little broken TODO: consider adding top back in
+                    // edges={headerShown ? ['left', 'right'] : ['top', 'left', 'right','bottom']}
                 >
-                    {/*<TouchableWithoutFeedback onPress={Keyboard.dismiss}>*/}
-                    {children}
-                    {experimentDefinition.debug && debug !== false && <Debug/> }
-                </KeyboardAvoidingView>
-            </SafeAreaView>
-        </ScrollView>
+                    {/*TODO: Note KeyboardAvoidingView should probably be the outer wrapper*/}
+                        {/*<TouchableWithoutFeedback onPress={Keyboard.dismiss}>*/}
+                        {children}
+                        {experimentDefinition.debug && debug !== false && <Debug/> }
+                </SafeAreaView>
+            </ScrollView>
+        </KeyboardAvoidingView>
+
     );
 };
 
@@ -86,24 +90,24 @@ const styles = StyleSheet.create({
         // borderColor: 'blue',
         flex: 1,
     },
+    keyboardAvoidingView: {
+    },
+    scrollView: {
+        flex: 1,
+        // borderColor: 'red',
+        // borderWidth: 1,
+    },
     scrollViewContentContainer: {
         // Pad inner content so scroll bar is pushed to right name of screen
         paddingHorizontal: '3%',
         // paddingBottom: 20,
-        // flex: 1,
-    },
-    scrollView: {
-        // flex: 1,
-        // borderColor: 'red',
-        // borderWidth: 1,
+        flexGrow: 1,
     },
     safeArea: {
         minHeight: '100%',
         width: '100%',
         // borderColor: 'blue',
         // borderWidth: 1,
-    },
-    keyboardAvoidingView: {
     },
     innerContainer: {
         // borderColor: 'red',
