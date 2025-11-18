@@ -75,6 +75,8 @@ const styles = StyleSheet.create({
     },
     title: {
         paddingTop: 0,
+        // backgroundColor: colours.primary,
+        color: colours.primary,
         // textDecorationLine: 'underline'
     },
     text: {
