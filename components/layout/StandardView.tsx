@@ -5,7 +5,7 @@ import {
     StyleSheet, RefreshControl
 } from 'react-native';
 import { SafeAreaView} from "react-native-safe-area-context";
-import { StatusBar } from 'expo-status-bar';
+import {StatusBar, StatusBarStyle} from 'expo-status-bar';
 import {colours} from "@/styles/appStyles";
 import Debug from "@/components/debug/Debug";
 import React from "react";
@@ -13,8 +13,10 @@ import {experimentDefinition} from "@/config/experimentDefinition";
 
 export const StandardView = ({
                                  children,
-                                 statusBarStyle = 'light',
                                  keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined,
+                                 statusBarStyle = 'inverted',
+                                    // NOTE: keyboard avoiding view causes a lot of issues -
+                                    // height on ios helps with orientation changes, and undefined for android stops a flicker on surveys
                                  headerShown = true,
                                  safeAreaStyle,
                                  keyboardAvoidingViewStyle,
@@ -27,7 +29,7 @@ export const StandardView = ({
                               }:
                               {
                                   children?: any,
-                                  statusBarStyle?: 'light'|'dark',
+                                  statusBarStyle?: StatusBarStyle,
                                   keyboardBehavior?: 'padding'|'height'|'position',
                                   headerShown?: boolean,
                                   safeAreaStyle?: object,
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
     },
     scrollViewContentContainer: {
         // Pad inner content so scroll bar is pushed to right name of screen
-        paddingHorizontal: 10,
+        paddingHorizontal: '3%',
         // paddingBottom: 20,
         // flex: 1,
     },
