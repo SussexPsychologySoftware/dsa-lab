@@ -49,7 +49,7 @@ const mainSurvey: SurveyComponent[] = [
         key: 'deviceSectionTitle',
         type: 'paragraph',
         title: 'About your device:',
-        titleStyle: sectionTitleStyle,
+        // titleStyle: sectionTitleStyle,
     },
     {
         key: 'onPhone',
@@ -169,7 +169,7 @@ const mainSurvey: SurveyComponent[] = [
         key: 'surroundingsSectionTitle',
         type: 'paragraph',
         title: 'About your surroundings: ',
-        titleStyle: sectionTitleStyle,
+        // titleStyle: sectionTitleStyle,
     },
     {
         key: 'location',
@@ -200,7 +200,7 @@ const mainSurvey: SurveyComponent[] = [
         key: 'demographicsSectionTitle',
         type: 'paragraph',
         title: 'About you: ',
-        titleStyle: sectionTitleStyle,
+        // titleStyle: sectionTitleStyle,
     },
     {
         key: 'age',
