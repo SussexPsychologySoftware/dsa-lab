@@ -129,44 +129,42 @@ export default function SurveyScreen() {
             headerShown={true}
             innerContainer={styles.inputsContainer}
         >
-            <View style={styles.inputsContainer}>
-                <Survey
-                    key={taskId} // Note using a key here forces react to tear down the survey and recreate when taskId changes.
-                    questions={questions}
-                    responses={responses}
-                    updateResponses={updateResponses}
-                    handleSurveySubmit={handleSurveySubmit}
-                    warning={warning}
-                    isSubmitting={isSubmitting}
-                    // progress={progress}
-                    invalidQuestions={invalidQuestions}
-                    />
-                    <Stack.Screen
-                        options={{
-                            title: surveyTitle,
-                            headerRight: taskDefinition.skippable ?
-                                () => <Button onPress={async () => await submitTaskData(taskDefinition,'skipped')} title="Skip" />
-                            : undefined,
-                        }}
-                    />
-                <SubmitButton
-                    onPress={() => {resetSurvey()}}
-                    text={"Reset Survey"}
-                    disabledText={"Resetting..."}
-                    disabled={false}
+            <Survey
+                key={taskId} // Note using a key here forces react to tear down the survey and recreate when taskId changes.
+                questions={questions}
+                responses={responses}
+                updateResponses={updateResponses}
+                handleSurveySubmit={handleSurveySubmit}
+                warning={warning}
+                isSubmitting={isSubmitting}
+                // progress={progress}
+                invalidQuestions={invalidQuestions}
                 />
+                <Stack.Screen
+                    options={{
+                        title: surveyTitle,
+                        headerRight: taskDefinition.skippable ?
+                            () => <Button onPress={async () => await submitTaskData(taskDefinition,'skipped')} title="Skip" />
+                        : undefined,
+                    }}
+                />
+            <SubmitButton
+                onPress={() => {resetSurvey()}}
+                text={"Reset Survey"}
+                disabledText={"Resetting..."}
+                disabled={false}
+            />
 
-                { experimentDefinition.debug &&
-                    <ExperimentInfo
-                        object={responses}
-                        objectTitle={'Survey Responses'}
-                        showExperimentDefinition={false}
-                        showExperimentState={false}
-                        showDisplayState={false}
-                        showQueue={false}
-                    />
-                }
-            </View>
+            { experimentDefinition.debug &&
+                <ExperimentInfo
+                    object={responses}
+                    objectTitle={'Survey Responses'}
+                    showExperimentDefinition={false}
+                    showExperimentState={false}
+                    showDisplayState={false}
+                    showQueue={false}
+                />
+            }
         </StandardView>
     );
 }
