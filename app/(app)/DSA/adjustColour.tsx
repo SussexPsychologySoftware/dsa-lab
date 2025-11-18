@@ -65,56 +65,21 @@ export default function AdjustColourScreen() {
         handleEndTrial,
         currentTrial,
         isTaskFinished,
-        responses,
         inISI
     } = useTrials(trials, onSubmit, 400);
 
-    if (isTaskFinished) {
-        return (
-            <FullscreenView>
-                <Text style={globalStyles.standardText}>
-                    Task Complete! Thank you.
-                    {JSON.stringify(responses, null, 2)}
-                </Text>
-            </FullscreenView>
-        );
-    }
-
-    if (!currentTrial) {
-        return (
-            <FullscreenView>
-                <Text style={globalStyles.standardText}>
-                    Loading...
-                </Text>
-            </FullscreenView>
-        );
-    }
-
-    // if (inISI) {
-    //     return (
-    //         <FullscreenView
-    //             style={{alignItems: "center", justifyContent: "center"}}
-    //         >
-    //             <Text style={{color:'white', fontSize: 50, textAlign: 'center'}}>+</Text>
-    //
-    //         </FullscreenView>
-    //     )
-    // }
-
+    // TODO: should probably make this a controlled component using the responses[currentTrialIndex]??
     return(
         <FullscreenView>
             {
-                inISI ?
-                    null
-                    :
+                currentTrial && !isSubmitting && !isTaskFinished && !inISI &&
                 <ChangeBackground
                     startColour={currentTrial.startingColour}
                     onSubmit={async (LAB, RGB) => await handleEndTrial({LAB, RGB})}
                     submitting={isSubmitting}
                 />
             }
-            <Text>{JSON.stringify(currentTrial)}</Text>
         </FullscreenView>
-       );
+    );
 }
 
