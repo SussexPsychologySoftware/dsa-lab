@@ -60,7 +60,7 @@ export const StandardView = ({
             <SafeAreaView
                 style={[styles.safeArea, safeAreaStyle]}
                 // Deal with padding manually as component a little broken
-                edges={headerShown ? ['left', 'right'] : ['top', 'left', 'right','bottom']}
+                // edges={headerShown ? ['left', 'right'] : ['top', 'left', 'right','bottom']}
             >
                 <StatusBar style={statusBarStyle}/>
                 {/*TODO: Note KeyboardAvoidingView should probably be the outer wrapper*/}

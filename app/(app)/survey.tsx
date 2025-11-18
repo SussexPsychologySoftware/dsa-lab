@@ -1,10 +1,10 @@
-import {View, StyleSheet, Text} from "react-native";
+import {View, StyleSheet, Text, Button} from "react-native";
 import SubmitButton from "@/components/inputs/SubmitButton";
 import {StandardView} from "@/components/layout/StandardView";
 import {globalStyles} from "@/styles/appStyles";
 import {useSurvey} from "@/hooks/useSurvey";
 import Survey from "@/components/survey/Survey";
-import {useLocalSearchParams} from 'expo-router';
+import {Stack, useLocalSearchParams} from 'expo-router';
 import {useExperiment} from "@/context/ExperimentContext";
 import {SurveyTaskDefinition, TaskDefinition} from "@/types/experimentConfig";
 import {useCallback, useEffect} from "react";
@@ -140,16 +140,15 @@ export default function SurveyScreen() {
                     isSubmitting={isSubmitting}
                     // progress={progress}
                     invalidQuestions={invalidQuestions}
-            <Stack.Screen
-                options={{
-                    title: surveyTitle,
-                    headerRight: taskDefinition.skippable ?
-                        () => <Button onPress={async () => await submitTaskData(taskDefinition,'skipped')} title="Skip" />
-                    : undefined,
-                }}
-            />
-                />
-
+                    />
+                    <Stack.Screen
+                        options={{
+                            title: surveyTitle,
+                            headerRight: taskDefinition.skippable ?
+                                () => <Button onPress={async () => await submitTaskData(taskDefinition,'skipped')} title="Skip" />
+                            : undefined,
+                        }}
+                    />
                 <SubmitButton
                     onPress={() => {resetSurvey()}}
                     text={"Reset Survey"}
@@ -175,6 +174,6 @@ export default function SurveyScreen() {
 const styles = StyleSheet.create({
     inputsContainer: {
         gap: 10,
-        marginTop: 20,
+        marginTop: 10,
     },
 });
