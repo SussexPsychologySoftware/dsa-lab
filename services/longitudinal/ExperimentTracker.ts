@@ -342,7 +342,6 @@ export class ExperimentTracker {
             const isAllowed = (allPreviousRequiredTasksComplete && !isCompleted) ||
                 (isCompleted && taskDef.allow_edit === true && !shouldSkip); // Don't allow edit for a skipped task
 
-            console.log({isAllowed, isCompleted})
             // Task is allowed if all previous required tasks are done
             displayStatuses.push({
                 definition: taskDef, // Just pass the whole definition
