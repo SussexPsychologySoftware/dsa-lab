@@ -6,12 +6,17 @@ export default function AdjustColourButton({ style, disabled, onPress, text, tex
 
     const [pressed, setPressed] = useState(false);
     const animationFrameRef = useRef<number | null>(null);
+    const onPressRef = useRef(onPress);
+    useEffect(() => {
+        onPressRef.current = onPress;
+    }, [onPress]);
 
     const loop = useCallback(() => {
-        onPress(); // state update
-        // Request next frame
+        if (onPressRef.current) {
+            onPressRef.current();
+        }        // Request next frame
         animationFrameRef.current = requestAnimationFrame(loop);
-    }, [onPress]);
+    }, []);
 
     const endPress = () => {
         setPressed(false);
@@ -28,7 +33,11 @@ export default function AdjustColourButton({ style, disabled, onPress, text, tex
         animationFrameRef.current = requestAnimationFrame(loop);
     };
 
-    useEffect(endPress, [disabled]);
+    useEffect(() => {
+        // If disabled changes while pressed, stop.
+        if(disabled) endPress();
+    }, [disabled]);
+
     // Cleanup on unMount just incase
     useEffect(() => {
         return (): void => {
