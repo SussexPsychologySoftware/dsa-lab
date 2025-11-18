@@ -25,6 +25,7 @@ interface SurveyProps {
     isSubmitting?: boolean;
     progress?: number;
     invalidQuestions?: Set<string>;
+    separators?: boolean;
 }
 
 export default function Survey({
@@ -36,6 +37,7 @@ export default function Survey({
                                    isSubmitting,
                                    progress,
                                    invalidQuestions,
+                                   separators
                                }: SurveyProps) {
     return (
         <View style={styles.container}>
@@ -200,19 +202,16 @@ export default function Survey({
                     <View key={`question-${key}`} style={[
                         styles.questionContainer,
                         question.conditions && styles.conditionalQuestion,
-                        !isInvalid && styles.questionContainerSeparator,
+                        !isInvalid && separators!==false && index!==questions.length-1 && styles.questionContainerSeparator,
                         isInvalid && globalStyles.invalidInput,
                     ]}>
                         {isInput && (question as SurveyQuestion).question && (
-                            <>
-                                <Text style={globalStyles.question}>
-                                    {(question as SurveyQuestion).question}
-                                    {"required" in question && question.required &&
-                                        <Text style={[globalStyles.question, {color: colours.secondary}]}>*</Text>
-                                    }
-                                </Text>
-
-                            </>
+                            <Text style={globalStyles.question}>
+                                {(question as SurveyQuestion).question}
+                                {"required" in question && question.required &&
+                                    <Text style={[globalStyles.question, {color: colours.secondary}]}>*</Text>
+                                }
+                            </Text>
                         )}
                         {component}
                     </View>
@@ -245,21 +244,17 @@ export default function Survey({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 25, // TODO: Sometimes looks kinda shit tho
+        gap: 25,
     },
     questionContainer: {
         gap: 10,
-        paddingTop: 15, // TODO: Sometimes looks kinda shit tho
         // Put here to keep consisent when invalid or not (questionContainerSeparator colour below)
-        borderTopWidth: 2,
         borderWidth: 2,
         borderColor: 'transparent',
-        // paddingBottom: 15,
-        // borderBottomWidth: 1,
-        // borderBottomColor: 'grey',
+        paddingBottom: 20,
     },
     questionContainerSeparator: {
-        borderTopColor: 'rgba(128, 128, 128,.2)',
+        borderBottomColor: 'rgba(128, 128, 128,.2)',
     },
     invalidContainer: {
         borderWidth: 2,
