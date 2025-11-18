@@ -9,6 +9,7 @@ import ChangeBackground from "@/components/DSA/ChangeBackground";
 import {useLocalSearchParams} from "expo-router";
 import {useExperiment} from "@/context/ExperimentContext";
 import {experimentDefinition} from "@/config/experimentDefinition";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 export default function AdjustColourScreen() {
     useLockOrientation()
@@ -50,6 +51,9 @@ export default function AdjustColourScreen() {
     const onSubmit = useCallback(async (responses: Record<string, any>[]) => {
         setIsSubmitting(true);
         if (taskDefinition) {
+            // Unlock async here and wait a bit to avoid race condition renderer crash when moving to next page
+            await ScreenOrientation.unlockAsync()
+            await new Promise(resolve => setTimeout(resolve, 300));
             await submitTaskData(taskDefinition, responses);
         } else {
             console.error("Unable to save responses: ", {taskDefinition});
