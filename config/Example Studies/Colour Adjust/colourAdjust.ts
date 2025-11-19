@@ -29,6 +29,11 @@ const setupSurvey: SurveyComponent[] = [
 
 const confirmSettingsSurvey: SurveyComponent[] = [
     {
+        key: 'DNDTitle',
+        type: 'paragraph',
+        title: 'Confirm settings',
+    },
+    {
         key: 'doNotDisturb',
         question: '',
         type: "checkbox",
@@ -36,12 +41,6 @@ const confirmSettingsSurvey: SurveyComponent[] = [
         required: true
     }
 ]
-
-const sectionTitleStyle = {
-    paddingBottom: 0,
-    marginBottom: -20,
-    color: colours.primary,
-}
 
 const mainSurvey: SurveyComponent[] = [
     // --- Device Section ---
@@ -231,11 +230,12 @@ const mainSurvey: SurveyComponent[] = [
 export const colourAdjuster: ExperimentDefinition = {
     name: 'DSA',
     passphrase: 'lab',
-    debug: false,
+    debug: true,
     send_data: true, //Set this to false at first and only flip back if consent granted to send data.
     autoroute: true,
     participant_info_datapipe_id: 'q2ecSpabQ6nH',
     tasks: [
+
         {
             id: 'setup',
             type: 'survey',
@@ -243,29 +243,6 @@ export const colourAdjuster: ExperimentDefinition = {
             prompt: 'Complete Setup',
             questions: setupSurvey,
             datapipe_id: 'q2ecSpabQ6nH',
-        },
-        {
-            id: 'confirm',
-            type: 'survey',
-            name: 'Confirm Settings Survey',
-            prompt: 'Confirm Settings',
-            questions: confirmSettingsSurvey,
-            // TODO: DON'T SEND DATA IF NO CONSENT GRANTED.
-        },
-        {
-            id: 'adjust',
-            type: 'screen',
-            path_to_screen: '/DSA/adjustColour',
-            name: 'Task',
-            prompt: 'Complete task',
-            datapipe_id: '4s7WE6aDDG5Y',
-            // TODO
-            // overwrite_parameters_on_load: [{
-            //     parameter: 'datapipe_id',
-            //     task_id: 'consent',
-            //     response_key: 'consent',
-            //     // if response is 'I would like to continue without my data being recorded.' then false
-            // }]
         },
         {
             id: 'survey',
@@ -280,6 +257,30 @@ export const colourAdjuster: ExperimentDefinition = {
                 operator: '!=',
                 compare_value: 'PHONE'
             }
+        },
+        {
+            id: 'confirm',
+            type: 'survey',
+            name: 'Confirm Settings Survey',
+            prompt: 'Confirm Settings',
+            questions: confirmSettingsSurvey,
+            // TODO: DON'T SEND DATA IF NO CONSENT GRANTED.
+        },
+        {
+            id: 'chipDimensions',
+            type: 'screen',
+            path_to_screen: '/DSA/chipScale',
+            name: 'Setup',
+            prompt: 'Complete Setup',
+            datapipe_id: '4s7WE6aDDG5Y',
+        },
+        {
+            id: 'adjust',
+            type: 'screen',
+            path_to_screen: '/DSA/adjustColour',
+            name: 'Task',
+            prompt: 'Complete task',
+            datapipe_id: '4s7WE6aDDG5Y',
         },
         {
             id: 'test',

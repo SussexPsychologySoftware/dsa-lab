@@ -2,7 +2,7 @@ import { Text, StyleSheet, Pressable, View, ColorValue } from 'react-native';
 import {useState, useRef, useEffect, useCallback} from "react";
 import {sizes} from "@/styles/appStyles";
 
-export default function AdjustColourButton({ style, disabled, onPress, text, textStyle, colour}: {style: object, disabled: boolean, onPress: ()=>void, text?: string, textStyle?: object, colour?: ColorValue}) {
+export default function AdjustColourButton({ style, disabled, onPress, text, textStyle, colour}: {style?: object, disabled: boolean, onPress: ()=>void, text?: string, textStyle?: object, colour?: ColorValue}) {
 
     const [pressed, setPressed] = useState(false);
     const animationFrameRef = useRef<number | null>(null);
@@ -54,41 +54,37 @@ export default function AdjustColourButton({ style, disabled, onPress, text, tex
             onLongPress={startLongPress}
             onPressOut={endPress}
             delayLongPress={200}
+            style={[
+                styles.adjustColourButton,
+                style,
+                {
+                    borderColor: disabled ? 'transparent' : colour??'black',
+                    backgroundColor: pressed ? colour??'black' : 'transparent',
+                },
+            ]}
             // unstable_pressDelay={0}
         >
-            <View style={[
-                    styles.adjustColourButton,
-                    style,
-                    {
-                        borderColor: disabled ? 'transparent' : colour??'black',
-                        backgroundColor: pressed ? colour??'black' : 'transparent',
-                    },
-                ]}>
-                <Text style={
-                    [
-                        styles.text,
-                        textStyle,
-                        {color: disabled ? 'transparent' : colour??'black'}
-                    ]
-                }>
-                    {text ?? '+'}
-                </Text>
-            </View>
+            <Text style={
+                [
+                    styles.text,
+                    textStyle,
+                    {color: disabled ? 'transparent' : colour??'black'}
+                ]
+            }>
+                {text ?? '+'}
+            </Text>
         </Pressable>
     );
 }
 
 const styles = StyleSheet.create({
     adjustColourButton: {
-        // paddingVertical: 10,
-        // paddingHorizontal: 10,
-        // margin: 10,
-        // borderWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
         borderRadius: 10,
         height: 50,
         width: 50,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     text: {
         fontSize: sizes.medium,

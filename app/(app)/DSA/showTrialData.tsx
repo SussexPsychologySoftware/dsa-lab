@@ -18,6 +18,7 @@ import {StatusBar} from "expo-status-bar";
 import Debug from "@/components/debug/Debug";
 import DebugButtons from "@/components/debug/DebugButtons";
 import AdjustColourButton from "@/components/DSA/AdjustColourButton";
+import {ChipDimensions} from "@/app/(app)/DSA/chipScale";
 // Return selected colour,
 // overthinking, maybe just pass in the update and toggle functions? horizontal?
 
@@ -42,8 +43,7 @@ export default function ShowTrialDataScreen() {
     const [trialData, setTrialData] = useState<Trial[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [showTrialList, setShowTrialList] = useState(false);
-    const [chipHeight, setChipHeight] = useState(120);
-    const [chipWidth, setChipWidth] = useState(100);
+    const [chipDimensions, setChipDimensions] = useState<ChipDimensions>({height: 0, width: 0});
 
     const testData: RGB[] = [
         {r:255, g:255, b:255},
@@ -71,10 +71,11 @@ export default function ShowTrialDataScreen() {
     const [backgroundColour, setBackgroundColour] = useState<ColorValue>(RGB2rgb(testData[0]));
     const [infoData, setInfoData] = useState<Record<string, any>>({});
 
+
     useEffect(() => {
         const loadPreviousData = async () => {
             try {
-                // Consent
+                // CONSENT =====
                 const infoFilename = getTaskFilename('setup')
                 if(!infoFilename) return null;
                 const participantInfo = await DataService.getData(infoFilename)
@@ -83,13 +84,28 @@ export default function ShowTrialDataScreen() {
                 //     Object.entries(infoData).filter(([_, v]) => v)
                 // )
                 setInfoData(participantInfo);
-                // Trials
+
+                // TRIALS =====
                 const trialsFilename = getTaskFilename('adjust')
                 if(!trialsFilename) return null;
                 const data = await DataService.getData(trialsFilename)
                 if (data === null) return null;
                 setTrialData(data.responses);
 
+                // CHIP DIMENSIONS ======
+                const loadChipDimensions = async() => {
+                    const dimensionsFilename = getTaskFilename('chipDimensions')
+                    if(!dimensionsFilename) return null;
+                    const data = await DataService.getData(dimensionsFilename)
+                    if(!data) {
+                        console.error('No chip dimensions set')
+                        return null;
+                    }
+                    const chipDimensions = data.responses as ChipDimensions;
+                    if(!chipDimensions) return;
+                    setChipDimensions(chipDimensions)
+                }
+                void loadChipDimensions();
             } catch (error) {
                 console.error('Error loading trial data:', error);
             }
@@ -131,84 +147,16 @@ export default function ShowTrialDataScreen() {
             style={styles.container}
         >
             <StatusBar style={'dark'}/>
-                <TouchableOpacity
-                    onPress={()=>{setShowTrialList(!showTrialList)}}
-                    style={styles.munsellChip}
-                >
-                    { showTrialList &&
-                        <AdjustColourButton
-                            style={{
-                                borderColor: backgroundColour,
-                                borderWidth: 1,
-                                margin: 2
-                            }}
-                            text='+'
-                            colour={backgroundColour}
-                            disabled={false}
-                            onPress={()=>{
-                                setChipHeight(chipHeight+1);
-                            }}
-                        />
-                    }
-                    <View
-                        style={{flexDirection:'row', gap: 5, alignItems: 'center'}}
-                    >
-                        { showTrialList &&
-
-                            <AdjustColourButton
-                                style={{
-                                    borderColor: backgroundColour,
-                                    borderWidth: 1,
-                                    margin: 2
-                                }}
-                                text='-'
-                                colour={backgroundColour}
-                                disabled={false}
-                                onPress={()=>{
-                                    setChipWidth(chipWidth-1);
-                                }}
-                            />
-                        }
-                        <MunsellChip
-                            height={chipHeight}
-                            width={chipWidth}
-                            color={backgroundColour}
-                        />
-                        { showTrialList &&
-
-                            <AdjustColourButton
-                                style={{
-                                    borderColor: backgroundColour,
-                                    borderWidth: 1,
-                                    margin: 2
-                                }}
-                                text='+'
-                                colour={backgroundColour}
-                                disabled={false}
-                                onPress={()=>{
-                                    setChipWidth(chipWidth+1);
-                                }}
-                            />
-                        }
-                    </View>
-
-                    { showTrialList &&
-                        <AdjustColourButton
-                            style={{
-                                borderColor: backgroundColour,
-                                borderWidth: 1,
-                                margin: 2
-                            }}
-                            text='-'
-                            colour={backgroundColour}
-                            disabled={false}
-                            onPress={()=>{
-                                setChipHeight(chipHeight-1);
-                            }}
-                        />
-                    }
-                </TouchableOpacity>
-
+            <TouchableOpacity
+                onPress={()=>{setShowTrialList(!showTrialList)}}
+                style={styles.munsellChip}
+            >
+                <MunsellChip
+                    height={chipDimensions.height??0}
+                    width={chipDimensions.width??0}
+                    color={backgroundColour}
+                />
+            </TouchableOpacity>
             {
                 showTrialList &&
                     <ScrollView

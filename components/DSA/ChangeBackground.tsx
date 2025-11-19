@@ -5,9 +5,10 @@ import { ColourConverter } from '@/utils/colourConversion';
 import { LAB, RGB, LCH } from "@/types/colours";
 import SubmitButton from "@/components/inputs/SubmitButton";
 import MunsellChip from "@/components/DSA/MunsellChip";
+import {ChipDimensions} from "@/app/(app)/DSA/chipScale";
 
 // Return selected colour,
-export default function ChangeBackground({ startColour, onSubmit, submitting }: {startColour: LCH, onSubmit: (colour: LAB, renderedRGB: RGB)=>void, submitting: boolean}) {
+export default function ChangeBackground({ startColour, onSubmit, submitting, chipDimensions }: {startColour: LCH, onSubmit: (colour: LAB, renderedRGB: RGB)=>void, submitting: boolean, chipDimensions: ChipDimensions }) {
     const [responseColour, setResponseColour] = useState<LAB>(()=> ColourConverter.lch2lab(startColour));
     const [aUpperBoundReached, setAUpperBoundReached] = useState(false);
     const [aLowerBoundReached, setALowerBoundReached] = useState(false);
@@ -104,6 +105,8 @@ export default function ChangeBackground({ startColour, onSubmit, submitting }: 
                 >
                     <MunsellChip
                         color={selectedRGB}
+                        height={chipDimensions.height}
+                        width={chipDimensions.width}
                     />
                 </Pressable>
 
