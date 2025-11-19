@@ -22,8 +22,8 @@ export default function ShowTrialDataScreen() {
     const taskDefinition = experimentDefinition.tasks.find(t => t.id === taskId);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [height, setHeight] = useState(120);
-    const [width, setWidth] = useState(100);
+    const [height, setHeight] = useState(90);
+    const [width, setWidth] = useState(80);
     const insets = useSafeAreaInsets();
 
     const handleSubmit = useCallback(async () => {
@@ -139,7 +139,9 @@ const styles = StyleSheet.create({
     bottom: {},
     left: {},
     right: {},
-    munsellChip: {},
+    munsellChip: {
+        justifyContent: 'center',
+    },
     submitButton: {
         position: 'absolute',
         borderColor: colour,
