@@ -28,11 +28,7 @@ const setupSurvey: SurveyComponent[] = [
 ];
 
 const confirmSettingsSurvey: SurveyComponent[] = [
-    {
-        key: 'DNDTitle',
-        type: 'paragraph',
-        title: 'Confirm settings',
-    },
+
     {
         key: 'doNotDisturb',
         question: '',
@@ -230,19 +226,42 @@ const mainSurvey: SurveyComponent[] = [
 export const colourAdjuster: ExperimentDefinition = {
     name: 'DSA',
     passphrase: 'lab',
-    debug: true,
+    debug: false,
     send_data: true, //Set this to false at first and only flip back if consent granted to send data.
     autoroute: true,
     participant_info_datapipe_id: 'q2ecSpabQ6nH',
     tasks: [
-
+        {
+            id: 'chipDimensions',
+            type: 'screen',
+            path_to_screen: '/DSA/chipScale',
+            name: 'Chip Dimensions',
+            prompt: 'Chip Dimensions',
+            datapipe_id: '4s7WE6aDDG5Y',
+        },
         {
             id: 'setup',
             type: 'survey',
             name: 'Setup',
-            prompt: 'Complete Setup',
+            prompt: 'Complete Code & Familiarity',
             questions: setupSurvey,
             datapipe_id: 'q2ecSpabQ6nH',
+        },
+        {
+            id: 'confirm',
+            type: 'survey',
+            name: 'Confirm Settings',
+            prompt: 'Confirm Settings',
+            questions: confirmSettingsSurvey,
+            // TODO: DON'T SEND DATA IF NO CONSENT GRANTED.
+        },
+        {
+            id: 'adjust',
+            type: 'screen',
+            path_to_screen: '/DSA/adjustColour',
+            name: 'Task',
+            prompt: 'Complete task',
+            datapipe_id: '4s7WE6aDDG5Y',
         },
         {
             id: 'survey',
@@ -257,30 +276,6 @@ export const colourAdjuster: ExperimentDefinition = {
                 operator: '!=',
                 compare_value: 'PHONE'
             }
-        },
-        {
-            id: 'confirm',
-            type: 'survey',
-            name: 'Confirm Settings Survey',
-            prompt: 'Confirm Settings',
-            questions: confirmSettingsSurvey,
-            // TODO: DON'T SEND DATA IF NO CONSENT GRANTED.
-        },
-        {
-            id: 'chipDimensions',
-            type: 'screen',
-            path_to_screen: '/DSA/chipScale',
-            name: 'Setup',
-            prompt: 'Complete Setup',
-            datapipe_id: '4s7WE6aDDG5Y',
-        },
-        {
-            id: 'adjust',
-            type: 'screen',
-            path_to_screen: '/DSA/adjustColour',
-            name: 'Task',
-            prompt: 'Complete task',
-            datapipe_id: '4s7WE6aDDG5Y',
         },
         {
             id: 'test',
