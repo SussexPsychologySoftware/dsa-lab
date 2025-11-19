@@ -129,6 +129,19 @@ export default function SurveyScreen() {
             headerShown={true}
             innerContainer={styles.inputsContainer}
         >
+            <Stack.Screen
+                options={{
+                    title: surveyTitle,
+                    headerRight: taskDefinition.skippable ?
+                        () => <Button onPress={async () => await submitTaskData(taskDefinition,'skipped')} title="Skip" />
+                        : undefined,
+                }}
+            />
+            { experimentDefinition.autoroute &&
+                <Text style={[globalStyles.pageTitle, {marginVertical: 20}]}>
+                    {surveyTitle}
+                </Text>
+            }
             <Survey
                 key={taskId} // Note using a key here forces react to tear down the survey and recreate when taskId changes.
                 questions={questions}
@@ -139,15 +152,7 @@ export default function SurveyScreen() {
                 isSubmitting={isSubmitting}
                 // progress={progress}
                 invalidQuestions={invalidQuestions}
-                />
-                <Stack.Screen
-                    options={{
-                        title: surveyTitle,
-                        headerRight: taskDefinition.skippable ?
-                            () => <Button onPress={async () => await submitTaskData(taskDefinition,'skipped')} title="Skip" />
-                        : undefined,
-                    }}
-                />
+            />
             <SubmitButton
                 onPress={() => {resetSurvey()}}
                 text={"Reset Survey"}
