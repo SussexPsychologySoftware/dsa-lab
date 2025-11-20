@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     adjustColourButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
+        // borderWidth: 1,
         borderRadius: 10,
         height: 50,
         width: 50,
