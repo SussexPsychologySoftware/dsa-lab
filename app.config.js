@@ -5,9 +5,9 @@
 const config = {
     expo: {
         name: "DSA LAB",
-        slug: "dsa",
+        slug: "colour-adjuster",
         scheme: "dsa",
-        version: "1.0.0",
+        version: "1.0.2",
         icon: "./assets/images/LAB_512.png",
         userInterfaceStyle: "dark",
         newArchEnabled: true,
@@ -23,7 +23,7 @@ const config = {
                 ],
                 ITSAppUsesNonExemptEncryption: false,
             },
-            bundleIdentifier: "com.maxlovell.dsa",
+            bundleIdentifier: "com.sussexcolourgroup.colouradjuster",
             backgroundColor: "#000000",
         },
         android: {
@@ -40,7 +40,7 @@ const config = {
                 "android.permission.MODIFY_AUDIO_SETTINGS",
                 "android.permission.RECORD_AUDIO",
             ],
-            package: "com.maxlovell.dsa",
+            package: "com.sussexcolourgroup.colouradjuster",
         },
         web: {
             bundler: "metro",
@@ -83,7 +83,7 @@ const config = {
         extra: {
             router: {},
             eas: {
-                projectId: "82d8a6a5-aef1-435f-9025-55cea15e0c7c"
+                projectId: "c291f0b6-ca05-4982-81d9-5db378b1cf0c" //original: 82d8a6a5-aef1-435f-9025-55cea15e0c7c
             }
         },
         backgroundColor: "#000000",
