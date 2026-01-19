@@ -137,6 +137,15 @@ export default function SurveyScreen() {
                         : undefined,
                 }}
             />
+            {
+                taskDefinition.skippable &&
+                <SubmitButton
+                    text='Click here to skip this page'
+                    onPress={async ()=>{
+                        await submitTaskData(taskDefinition,'skipped')
+                    }}
+                />
+            }
             { experimentDefinition.autoroute &&
                 <Text style={[globalStyles.pageTitle, {marginVertical: 20}]}>
                     {surveyTitle}
